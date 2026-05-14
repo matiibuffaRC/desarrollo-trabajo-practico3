@@ -22,5 +22,17 @@ dist-ssr
 *.sln
 *.sw?
 
-VITE_SPOTIFY_CLIENT_ID=6f0b88fa09e34dd1a12d8585a1d14380
-VITE_SPOTIFY_CLIENT_SECRET=8f20c3b3e2d0424993ba294eae3211bb
+# Dependencias
+node_modules/
+
+# Variables de entorno (SEGURIDAD)
+.env
+.env.local
+
+# Build/Producción
+dist/
+build/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
