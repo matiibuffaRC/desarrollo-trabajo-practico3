@@ -1,13 +1,10 @@
-// Dependencias
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getAccessToken } from './services/spotifyApi';
-// Componentes
-import Header from "../src/components/Header/Header.jsx";
-import AlbumPage from "../src/components/pages/AlbumPage";
-import ArtistPage from "../src/components/pages/ArtistPage";
-import HomePage from "../src/components/pages/homeePage";
-import StatusFeedback from "./components/StatusFeedback"
+import Header from "./components/Header/Header.jsx";
+import AlbumPage from "./components/pages/AlbumPage.jsx";
+import ArtistPage from "./components/pages/ArtistPage.jsx";
+import HomePage from "./components/pages/HomePage.jsx";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -34,21 +31,15 @@ function App() {
 
   return (
     <Router>
-      <Header /> {/* Tu componente Header se mantiene fijo arriba */}
+      <Header />
       <main className="container">
         <Routes>
-          {/* Vista 1: Buscador (Opción #3 [cite: 39]) */}
           <Route path="/" element={<HomePage token={token} />} />
-          
-          {/* Vista 2: Álbumes (Opción #3 [cite: 40]) */}
           <Route path="/artist/:artistId" element={<ArtistPage token={token} />} />
-          
-          {/* Vista 3: Canciones (Opción #3 [cite: 41]) */}
           <Route path="/album/:albumId" element={<AlbumPage token={token} />} />
         </Routes>
       </main>
     </Router>
   );
 }
-
 export default App
