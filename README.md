@@ -2,9 +2,9 @@
 
 Trabajo: 
 Consumo de API - Spotify
-  Tecnologías utilizadas:
-    - React
-    - Node.js
-    - Express
-    - Material UI
-    - Vercel
+Tecnologías utilizadas:
+  - React
+  - Node.js
+  - Express
+  - Material UI
+  - Vercel
