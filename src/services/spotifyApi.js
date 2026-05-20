@@ -20,7 +20,7 @@ export const getAccessToken = async () => {
     return response.data.access_token;
   } catch (error) {
     console.error("Error obteniendo el token de Spotify", error);
-    throw error;
+    throw error; // Esto nos servirá para el estado de "Error" solicitado 
   }
 };
 export const spotifyClient = axios.create({

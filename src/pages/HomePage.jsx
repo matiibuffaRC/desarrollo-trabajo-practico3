@@ -21,7 +21,7 @@ function HomePage({ token }) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                params: {
+                params: {   
                     q: searchKey,
                     type: "artist",
                     limit: 6
@@ -40,8 +40,21 @@ function HomePage({ token }) {
                 <InicieSection />
                 <SearchBar onSearch={handleSearch} />
                 
-                {loading && <StatusFeedback type="loading" message="Buscando en Spotify..." />}
-                {error && <StatusFeedback type="error" message={error} />}
+                {loading && (
+                    <StatusFeedback
+                        type="loading"
+                        message="Buscando en Spotify..."
+                        onClose={() => setLoading(false)}
+                    />
+                    )}
+
+                    {error && (
+                    <StatusFeedback
+                        type="error"
+                        message={error}
+                        onClose={() => setError(null)}
+                    />
+                )}
 
                 <h2 className='text-3xl font-bold m-2 mt-8'>Resultados de la búsqueda</h2>
                 

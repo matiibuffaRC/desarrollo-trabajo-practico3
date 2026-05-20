@@ -1,36 +1,62 @@
-import React from 'react';
+import { X } from "lucide-react";
+import { useEffect } from "react";
 
-const StatusFeedback = ({ type, message }) => {
-  // Estilos rápidos para que se vea bien en la defensa
-  const styles = {
-    container: {
-      padding: '20px',
-      textAlign: 'center',
-      marginTop: '50px',
-      borderRadius: '8px',
-      fontFamily: 'sans-serif'
-    },
-    loading: {
-      backgroundColor: '#f0f0f0',
-      color: '#1DB954', // Verde Spotify
-      border: '1px solid #1DB954'
-    },
-    error: {
-      backgroundColor: '#ffebee',
-      color: '#c62828',
-      border: '1px solid #c62828'
-    }
-  };
+const StatusFeedback = ({
+  type,
+  message,
+  onClose,
+  duration = 3000,
+}) => {
+  const isLoading = type === "loading";
 
-  const currentStyle = type === 'loading' ? styles.loading : styles.error;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, [onClose, duration]);
 
   return (
-    <div style={{ ...styles.container, ...currentStyle }}>
-      {type === 'loading' ? (
-        <h2>⏳ {message || 'Cargando...'}</h2>
-      ) : (
-        <h2>⚠️ Error: {message || 'Algo salió mal'}</h2>
-      )}
+    <div
+      className={`
+        fixed bottom-3 right-3 z-50
+        w-50 md:w-80 
+        px-5 py-4 rounded-2xl
+        backdrop-blur-md
+        border shadow-2xl
+        text-xs md:text-md
+        flex items-center gap-3
+        animate-slideIn
+        
+        ${
+          isLoading
+            ? "bg-green-500/20 border-green-400/30 text-green-200"
+            : "bg-red-500/20 border-red-400/30 text-red-200"
+        }
+      `}
+    >
+      <span className="text-xl mt-0.5">
+        {isLoading ? "⏳" : "⚠️"}
+      </span>
+
+      <div className="flex-1">
+        <p className="font-medium">
+          {isLoading
+            ? message || "Cargando..."
+            : `Error: ${message || "Algo salió mal"}`}
+        </p>
+      </div>
+
+      <button
+        onClick={onClose}
+        className="
+          text-white/70 hover:text-white
+          transition cursor-pointer
+        "
+      >
+        <X size={18} />
+      </button>
     </div>
   );
 };
