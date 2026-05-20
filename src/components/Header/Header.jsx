@@ -63,8 +63,6 @@ function Header() {
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
             <div className="flex items-center gap-3">
                 <MobileMenuButton setIsMenuOpen={setIsMenuOpen} />
-
-                
             </div>
 
             <DesktopNav setIsArtistsFavListOpen={setIsArtistsFavListOpen} />
