@@ -1,21 +1,29 @@
-// Dependencias
-import { Routes, Route } from "react-router-dom";
-
-// Componentes
-import Header from "../src/components/Header/Header.jsx";
-
-// Pages
-import HomePage from "./pages/HomePage.jsx" 
+import { useEffect, useState } from "react";
+import { getAccessToken } from "./services/spotifyApi";
+import Header from "./components/Header/Header.jsx";
+import HomePage from "./pages/HomePage.jsx";
 
 function App() {
-        return (
-            <>
-                <Header></Header>
-                <Routes>
-                    <Route path="/" element={<HomePage />}></Route>
-                </Routes>
-            </>
-        )
+    const [token, setToken] = useState("");
+
+    useEffect(() => {
+        const fetchToken = async () => {
+        try {
+            const tokenObtenido = await getAccessToken();
+            setToken(tokenObtenido);
+        } catch (error) {
+            console.error("Error al obtener el token de Spotify:", error);
+        }
+        };
+        fetchToken();
+    }, []);
+
+    return (
+        <>
+        <Header />
+        <HomePage token={token} />
+        </>
+    );
 }
 
-export default App
+export default App;
