@@ -15,7 +15,7 @@ function MobileSidebar({
         >
             <div className="mb-10 flex items-center justify-between">
                 <h2 className="text-2xl font-black text-[#1DB954]">
-                    Soundify
+                    SpotifyAPI
                 </h2>
 
                 <button

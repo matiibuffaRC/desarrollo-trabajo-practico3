@@ -55,7 +55,7 @@ function ArtistPage({ token }) {
                         { id: `gen_alb2_${id}`, name: "Greatest Hits (Live)", release_date: "2025", images: [{ url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600" }] }
                     ])
                 }
-            } finally { // 👈 Corregido el finally acá
+            } finally { 
                 setLoading(false)
             }
         }

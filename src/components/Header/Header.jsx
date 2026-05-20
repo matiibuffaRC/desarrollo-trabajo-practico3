@@ -7,73 +7,71 @@ import MobileMenuButton from "./MobileMenuButton";
 import ArtistsFavList from "./ArtistsFavList";
 
 function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isArtistsFavListOpen, setIsArtistsFavListOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isArtistsFavListOpen, setIsArtistsFavListOpen] = useState(false);
 
-  const [favoriteArtists, setFavoriteArtists] = useState([]);
+    const [favoriteArtists, setFavoriteArtists] = useState([]);
 
-  useEffect(() => {
-    // Inicializamos desde localStorage
-    try {
-      const saved = localStorage.getItem("spotify_favorites");
-      if (saved) setFavoriteArtists(JSON.parse(saved));
-    } catch (e) {
-      setFavoriteArtists([]);
-    }
-
-    // Escuchamos actualizaciones de favoritos desde HomePage
-    const handler = (e) => {
-      if (e?.detail) setFavoriteArtists(e.detail);
-      else {
+    useEffect(() => {
+        // Inicializamos desde localStorage
         try {
-          const saved = localStorage.getItem("spotify_favorites");
-          setFavoriteArtists(saved ? JSON.parse(saved) : []);
-        } catch (err) {
-          setFavoriteArtists([]);
+        const saved = localStorage.getItem("spotify_favorites");
+        if (saved) setFavoriteArtists(JSON.parse(saved));
+        } catch (e) {
+        setFavoriteArtists([]);
         }
-      }
-    };
 
-    window.addEventListener("spotify:favorites:updated", handler);
+        // Escuchamos actualizaciones de favoritos desde HomePage
+        const handler = (e) => {
+        if (e?.detail) setFavoriteArtists(e.detail);
+        else {
+            try {
+            const saved = localStorage.getItem("spotify_favorites");
+            setFavoriteArtists(saved ? JSON.parse(saved) : []);
+            } catch (err) {
+            setFavoriteArtists([]);
+            }
+        }
+        };
 
-    return () =>
-      window.removeEventListener("spotify:favorites:updated", handler);
-  }, []);
+        window.addEventListener("spotify:favorites:updated", handler);
 
-  return (
-    <>
-      <MobileOverlay
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        setIsArtistsFavListOpen={setIsArtistsFavListOpen}
-      />
+        return () =>
+        window.removeEventListener("spotify:favorites:updated", handler);
+    }, []);
 
-      <MobileSidebar
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        setIsArtistsFavListOpen={setIsArtistsFavListOpen}
-      />
+    return (
+        <>
+        <MobileOverlay
+            isMenuOpen={isMenuOpen}
+            setIsMenuOpen={setIsMenuOpen}
+            setIsArtistsFavListOpen={setIsArtistsFavListOpen}
+        />
 
-      <ArtistsFavList
-        isArtistsFavListOpen={isArtistsFavListOpen}
-        setIsArtistsFavListOpen={setIsArtistsFavListOpen}
-        favoriteArtists={favoriteArtists}
-      />
-      <header className="sticky top-0 z-30 border-b border-zinc-800 bg-[#121212]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
-            <MobileMenuButton setIsMenuOpen={setIsMenuOpen} />
+        <MobileSidebar
+            isMenuOpen={isMenuOpen}
+            setIsMenuOpen={setIsMenuOpen}
+            setIsArtistsFavListOpen={setIsArtistsFavListOpen}
+        />
 
-            <h1 className="text-2xl font-black tracking-tight text-[#1DB954]">
-              Soundify
-            </h1>
-          </div>
+        <ArtistsFavList
+            isArtistsFavListOpen={isArtistsFavListOpen}
+            setIsArtistsFavListOpen={setIsArtistsFavListOpen}
+            favoriteArtists={favoriteArtists}
+        />
+        <header className="sticky top-0 z-30 shadow-md bg-black/90 backdrop-blur-xl">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+            <div className="flex items-center gap-3">
+                <MobileMenuButton setIsMenuOpen={setIsMenuOpen} />
 
-          <DesktopNav setIsArtistsFavListOpen={setIsArtistsFavListOpen} />
-        </div>
-      </header>
-    </>
-  );
+                
+            </div>
+
+            <DesktopNav setIsArtistsFavListOpen={setIsArtistsFavListOpen} />
+            </div>
+        </header>
+        </>
+    );
 }
 
 export default Header;
