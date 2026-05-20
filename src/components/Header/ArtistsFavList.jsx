@@ -19,7 +19,7 @@ function ArtistsFavList({
 
             {/* DRAWER */}
             <aside
-                className={`fixed right-0 top-0 z-50 flex h-screen w-full max-w-[380px] flex-col border-l border-zinc-800 bg-[#121212] transition-transform duration-300 ${
+                className={`fixed right-0 top-0 z-50 flex h-screen w-full max-w-95 flex-col border-l border-zinc-800 bg-[#121212] transition-transform duration-300 ${
                     isArtistsFavListOpen
                         ? 'translate-x-0'
                         : 'translate-x-full'

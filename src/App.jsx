@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import Header from './components/Header/Header'
 import HomePage from './pages/HomePage'
 import ArtistPage from './pages/ArtistPage'
 import AlbumPage from './pages/AlbumPage' 
@@ -22,6 +23,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/" element={<HomePage token={token} />} />
         <Route path="/artist/:id" element={<ArtistPage token={token} />} />
