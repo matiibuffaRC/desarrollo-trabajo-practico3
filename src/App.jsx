@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import HomePage from './pages/HomePage'
 import ArtistPage from './pages/ArtistPage'
-import AlbumPage from './pages/AlbumPage'
+import AlbumPage from './pages/AlbumPage' 
 import { getAccessToken } from './services/spotifyApi'
 
 function App() {
@@ -14,17 +14,20 @@ function App() {
         const resToken = await getAccessToken()
         setToken(resToken)
       } catch (err) {
-        console.error("Error al obtener token", err)
+        console.error("Error al obtener token:", err)
       }
     }
     fetchToken()
   }, [])
 
   return (
-    <BrowserRouter> {/* Este es el único enrutador de toda la app */}
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage token={token} />} />
         <Route path="/artist/:id" element={<ArtistPage token={token} />} />
+        
+        {/* 🌟 ASEGURATE DE QUE ESTE PATH ESTÉ ESCRITO IDÉNTICO A ESTE: */}
+        <Route path="/album/:albumId" element={<AlbumPage token={token} />} />
       </Routes>
     </BrowserRouter>
   )
