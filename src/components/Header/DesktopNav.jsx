@@ -13,7 +13,7 @@ function DesktopNav({ setIsArtistsFavListOpen }) {
                 {link.label === 'Biblioteca' ? (
                     <button
                         onClick={() => setIsArtistsFavListOpen(true)}
-                        className={`rounded-full px-5 py-1 text-md transition-colors hover:cursor-pointer ${
+                        className={`rounded-full px-5 py-1 text-md transition-colors hover:cursor-pointer cursor-pointer ${
                             index === 0
                                 ? 'bg-[#1DB954] font-semibold text-black'
                                 : 'font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white'

@@ -38,7 +38,7 @@ function ArtistsFavList({
 
           <button
             onClick={() => setIsArtistsFavListOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-800 text-white hover:bg-zinc-700"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-800 text-white hover:bg-zinc-700 cursor-pointer"
           >
             ✕
           </button>
