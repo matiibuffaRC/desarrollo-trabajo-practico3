@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
+import CorazonVacio from "../assets/icons/heartVacio.svg";
+import CorazonRelleno from "../assets/icons/heartRelleno.svg";
+
 const DEFAULT_ARTIST_IMAGE =
   "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200";
 
@@ -24,46 +27,70 @@ const normalizeArtistForFavorite = (artist) => ({
 
 function HomePage({ token }) {
   const navigate = useNavigate();
+
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [favorites, setFavorites] = useState([]);
 
-  // Levantar artistas favoritos del LocalStorage al iniciar
+  // Cargar favoritos desde localStorage e inicializar sincronización global
   useEffect(() => {
-    const savedFavs = localStorage.getItem("spotify_favorites");
-    if (savedFavs) {
+    const normalizeSavedFavorites = (saved) => {
       try {
-        const parsed = JSON.parse(savedFavs);
-        setFavorites(
-          Array.isArray(parsed) ? parsed.map(normalizeArtistForFavorite) : [],
-        );
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed)
+          ? parsed.map(normalizeArtistForFavorite)
+          : [];
       } catch (err) {
         console.error("Error parseando favoritos:", err);
+        return [];
       }
+    };
+
+    // Inicializar desde localStorage
+    const saved = localStorage.getItem("spotify_favorites");
+    if (saved) {
+      setFavorites(normalizeSavedFavorites(saved));
     }
+
+    // Escuchar cambios globales de favoritos (desde ArtistFavList u otros componentes)
+    const handleFavoritesUpdate = (e) => {
+      if (e?.detail) {
+        setFavorites(e.detail.map(normalizeArtistForFavorite));
+      } else {
+        // Si el evento no trae detalles, recargar desde localStorage
+        const saved = localStorage.getItem("spotify_favorites");
+        setFavorites(saved ? normalizeSavedFavorites(saved) : []);
+      }
+    };
+
+    window.addEventListener("spotify:favorites:updated", handleFavoritesUpdate);
+
+    return () =>
+      window.removeEventListener(
+        "spotify:favorites:updated",
+        handleFavoritesUpdate,
+      );
   }, []);
 
-  // Función para añadir/quitar un ARTISTA de favoritos
+  // Agregar / quitar favoritos
   const handleToggleFavorite = (e, artist) => {
-    e.stopPropagation(); // 👈 Evita que te redirija a sus álbumes al tocar el corazón
+    e.stopPropagation();
 
     const alreadyExists = favorites.some((fav) => fav.id === artist.id);
+
     let updatedFavorites = [];
 
     if (alreadyExists) {
-      // Si ya existe, lo removemos
       updatedFavorites = favorites.filter((fav) => fav.id !== artist.id);
-      alert(`¡${artist.name} eliminado de favoritos! ❌`);
     } else {
-      // Si no existe, lo agregamos con imagen normalizada
       updatedFavorites = [...favorites, normalizeArtistForFavorite(artist)];
-      alert(`¡${artist.name} añadido a tus artistas favoritos! ⭐`);
     }
 
     setFavorites(updatedFavorites);
+
     localStorage.setItem("spotify_favorites", JSON.stringify(updatedFavorites));
-    // Emitimos un evento para que otros componentes (ej. Header) actualicen su lista
+
     try {
       window.dispatchEvent(
         new CustomEvent("spotify:favorites:updated", {
@@ -71,10 +98,11 @@ function HomePage({ token }) {
         }),
       );
     } catch (e) {
-      // ignore en entornos sin window
+      console.log(e);
     }
   };
 
+  // Buscar artistas
   const handleSearch = async (searchKey) => {
     if (!searchKey) return;
 
@@ -83,7 +111,9 @@ function HomePage({ token }) {
 
     try {
       const { data } = await axios.get("https://api.spotify.com/v1/search", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           q: searchKey,
           type: "artist",
@@ -98,6 +128,7 @@ function HomePage({ token }) {
       }
     } catch (err) {
       console.error("Error en búsqueda:", err);
+
       setError("Problemas de CORS. Cargando artistas de simulación.");
 
       setArtists([
@@ -133,19 +164,22 @@ function HomePage({ token }) {
     <main className="min-h-screen bg-[#121212] px-4 py-10 text-white">
       <section className="mx-auto max-w-6xl">
         <InicieSection />
+
         <SearchBar onSearch={handleSearch} />
 
         {loading && (
           <StatusFeedback type="loading" message="Buscando artistas..." />
         )}
+
         {error && <StatusFeedback type="error" message={error} />}
 
-        {/* Seccion de Mis Artistas Favoritos */}
+        {/* FAVORITOS */}
         {favorites.length > 0 && (
           <div className="mt-8 mb-6">
             <h2 className="text-2xl font-bold text-[#1DB954] mb-4">
               Mis Artistas Favoritos
             </h2>
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {favorites.map((fav) => (
                 <div
@@ -163,31 +197,42 @@ function HomePage({ token }) {
                     genre={fav.genre || "Favorito"}
                     image={fav.image || DEFAULT_ARTIST_IMAGE}
                   />
+
                   <button
                     onClick={(e) => handleToggleFavorite(e, fav)}
-                    className="absolute top-3 right-3 bg-red-600/90 hover:bg-red-600 text-white text-xs px-1 py-1 rounded-full transition-colors"
+                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110"
+                    title="Quitar de favoritos"
                   >
-                    Quitar ❌
+                    <img
+                      src={CorazonRelleno}
+                      alt="Quitar de favoritos"
+                      className="w-4 h-4 invert cursor-pointer"
+                    />
                   </button>
                 </div>
               ))}
             </div>
+
             <hr className="border-zinc-800 mt-8" />
           </div>
         )}
 
-        {/* Resultados de la búsqueda de Artistas */}
+        {/* RESULTADOS */}
         <h2 className="text-3xl font-bold m-2 mt-8">Artistas encontrados</h2>
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-4">
           {artists.length > 0
             ? artists.map((artist) => {
                 const isFav = favorites.some((fav) => fav.id === artist.id);
+
                 return (
                   <div
                     key={artist.id}
                     onClick={() =>
                       navigate(
-                        `/artist/${artist.id}?name=${encodeURIComponent(artist.name)}`,
+                        `/artist/${artist.id}?name=${encodeURIComponent(
+                          artist.name,
+                        )}`,
                       )
                     }
                     className="cursor-pointer relative group transform hover:-translate-y-1 transition-transform"
@@ -200,17 +245,20 @@ function HomePage({ token }) {
                       }
                       image={getArtistImage(artist)}
                     />
-                    {/* 🌟 CORAZÓN EN EL ARTISTA: Guarda al artista entero */}
+
+                    {/* BOTÓN FAVORITO */}
                     <button
                       onClick={(e) => handleToggleFavorite(e, artist)}
-                      className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-lg transition-transform transform hover:scale-110 ${
-                        isFav ? "bg-red-600" : "bg-[#1DB954]"
-                      }`}
+                      className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110 cursor-pointer"
                       title={
                         isFav ? "Quitar de favoritos" : "Añadir a favoritos"
                       }
                     >
-                      {isFav ? "❌" : "❤️"}
+                      <img
+                        src={isFav ? CorazonRelleno : CorazonVacio}
+                        alt="Favorito"
+                        className="w-4 h-4 invert cursor-pointer"
+                      />
                     </button>
                   </div>
                 );

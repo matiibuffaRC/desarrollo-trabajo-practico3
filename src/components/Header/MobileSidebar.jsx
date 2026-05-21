@@ -19,7 +19,7 @@ function MobileSidebar({
 
                 <button
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-800 text-xs text-white"
+                    className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-800 text-xs text-white cursor-pointer"
                 >
                     ✕
                 </button>
@@ -35,7 +35,7 @@ function MobileSidebar({
                                         setIsArtistsFavListOpen(true);
                                         setIsMenuOpen(false);
                                     }}
-                                    className={`block w-full rounded-xl px-4 py-3 text-left transition-colors ${
+                                    className={`block w-full rounded-xl px-4 py-3 text-left transition-colors cursor-pointer ${
                                         index === 0
                                             ? 'bg-[#1DB954] text-black'
                                             : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
