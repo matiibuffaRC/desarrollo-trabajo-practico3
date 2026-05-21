@@ -8,43 +8,43 @@ import { useFavorites } from "../hooks/useFavorites";
 import { useArtistSearch } from "../hooks/useArtistSearch";
 
 function HomePage({ token }) {
-  const navigate = useNavigate();
-  const { favorites, toggleFavorite } = useFavorites();
-  const { artists, loading, error, handleSearch } = useArtistSearch(token);
+    const navigate = useNavigate();
+    const { favorites, toggleFavorite } = useFavorites();
+    const { artists, loading, error, handleSearch } = useArtistSearch(token);
 
-  const handleNavigate = (artistId, artistName) => {
-    navigate(`/artist/${artistId}?name=${encodeURIComponent(artistName)}`);
-  };
+    const handleNavigate = (artistId, artistName) => {
+        navigate(`/artist/${artistId}?name=${encodeURIComponent(artistName)}`);
+    };
 
-  return (
-    <main className="min-h-screen bg-[#121212] px-4 py-10 text-white">
-      <section className="mx-auto max-w-6xl">
-        <InicieSection />
+    return (
+        <main className="min-h-screen bg-[#121212] px-4 py-10 text-white">
+        <section className="mx-auto max-w-6xl">
+            <InicieSection />
 
-        <SearchBar onSearch={handleSearch} />
+            <SearchBar onSearch={handleSearch} />
 
-        {loading && (
-          <StatusFeedback type="loading" message="Buscando artistas..." />
-        )}
+            {loading && (
+            <StatusFeedback type="loading" message="Buscando artistas..." />
+            )}
 
-        {error && <StatusFeedback type="error" message={error} />}
+            {error && <StatusFeedback type="error" message={error} />}
 
-        <FavoritesSection
-          favorites={favorites}
-          onToggle={toggleFavorite}
-          onNavigate={handleNavigate}
-        />
+            <FavoritesSection
+            favorites={favorites}
+            onToggle={toggleFavorite}
+            onNavigate={handleNavigate}
+            />
 
-        <ArtistsGrid
-          artists={artists}
-          favorites={favorites}
-          loading={loading}
-          onToggle={toggleFavorite}
-          onNavigate={handleNavigate}
-        />
-      </section>
-    </main>
-  );
+            <ArtistsGrid
+            artists={artists}
+            favorites={favorites}
+            loading={loading}
+            onToggle={toggleFavorite}
+            onNavigate={handleNavigate}
+            />
+        </section>
+        </main>
+    );
 }
 
 export default HomePage;
