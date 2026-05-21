@@ -7,7 +7,7 @@ function DesktopNav({ setIsArtistsFavListOpen }) {
 <nav className="hidden md:block">
     <ul className="flex items-center gap-1 rounded-2xl p-1">
         {navLinks.map((link, index) => (
-            <li key={link.label} className="border border-red-500">
+            <li key={link.label}>
                 
                 {/* Si es Biblioteca → botón */}
                 {link.label === 'Biblioteca' ? (

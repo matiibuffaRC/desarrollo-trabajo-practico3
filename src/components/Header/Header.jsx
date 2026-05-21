@@ -87,7 +87,7 @@ function Header() {
       />
       <header className="sticky top-0 z-30 shadow-md bg-black/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 md:hidden">
             <MobileMenuButton setIsMenuOpen={setIsMenuOpen} />
           </div>
 
