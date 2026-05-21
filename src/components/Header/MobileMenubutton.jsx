@@ -4,7 +4,7 @@ function MobileMenuButton({ setIsMenuOpen }) {
     return (
         <button
             onClick={() => setIsMenuOpen(true)}
-            className="flex items-center justify-center rounded-2xl bg-[#181818] p-2 text-white transition-colors hover:bg-zinc-800 md:hidden"
+            className="flex items-center justify-center rounded-2xl p-2 text-white transition-colors "
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"

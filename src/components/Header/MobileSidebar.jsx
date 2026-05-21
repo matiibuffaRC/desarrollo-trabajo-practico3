@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { navLinks } from './navLinks';
 
 function MobileSidebar({
@@ -8,14 +9,12 @@ function MobileSidebar({
     return (
         <aside
             className={`fixed left-0 top-0 z-50 h-screen w-70 border-r border-zinc-800 bg-[#181818] p-6 transition-transform duration-300 md:hidden ${
-                isMenuOpen
-                    ? 'translate-x-0'
-                    : '-translate-x-full'
+                isMenuOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
         >
             <div className="mb-10 flex items-center justify-between">
                 <h2 className="text-2xl font-black text-[#1DB954]">
-                    Soundify
+                    SpotifyAPI
                 </h2>
 
                 <button
@@ -30,21 +29,33 @@ function MobileSidebar({
                 <ul className="flex flex-col gap-3 text-base font-medium">
                     {navLinks.map((link, index) => (
                         <li key={link.label}>
-                            <button
-                                onClick={() => {
-                                    if (link.label === 'Biblioteca') {
+                            {link.label === 'Biblioteca' ? (
+                                <button
+                                    onClick={() => {
                                         setIsArtistsFavListOpen(true);
                                         setIsMenuOpen(false);
-                                    }
-                                }}
-                                className={`block w-full rounded-xl px-4 py-3 text-left transition-colors ${
-                                    index === 0
-                                        ? 'bg-[#1DB954] text-black'
-                                        : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
-                                }`}
-                            >
-                                {link.label}
-                            </button>
+                                    }}
+                                    className={`block w-full rounded-xl px-4 py-3 text-left transition-colors ${
+                                        index === 0
+                                            ? 'bg-[#1DB954] text-black'
+                                            : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                                    }`}
+                                >
+                                    {link.label}
+                                </button>
+                            ) : (
+                                <Link
+                                    to={link.path}
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className={`block w-full rounded-xl px-4 py-3 text-left transition-colors ${
+                                        index === 0
+                                            ? 'bg-[#1DB954] text-black'
+                                            : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                                    }`}
+                                >
+                                    {link.label}
+                                </Link>
+                            )}
                         </li>
                     ))}
                 </ul>

@@ -1,28 +1,37 @@
-import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Header from "./components/Header/Header";
+import HomePage from "./pages/HomePage";
+import ArtistPage from "./pages/ArtistPage";
+import AlbumPage from "./pages/AlbumPage";
 import { getAccessToken } from "./services/spotifyApi";
-import Header from "./components/Header/Header.jsx";
-import HomePage from "./pages/HomePage.jsx";
 
 function App() {
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(null);
 
     useEffect(() => {
-        const fetchToken = async () => {
+        async function fetchToken() {
         try {
-            const tokenObtenido = await getAccessToken();
-            setToken(tokenObtenido);
-        } catch (error) {
-            console.error("Error al obtener el token de Spotify:", error);
+            const resToken = await getAccessToken();
+            setToken(resToken);
+        } catch (err) {
+            console.error("Error al obtener token:", err);
         }
-        };
+        }
         fetchToken();
     }, []);
 
     return (
-        <>
+        <BrowserRouter>
         <Header />
-        <HomePage token={token} />
-        </>
+        <Routes>
+            <Route path="/" element={<HomePage token={token} />} />
+            <Route path="/artist/:id" element={<ArtistPage token={token} />} />
+
+            {/* 🌟 ASEGURATE DE QUE ESTE PATH ESTÉ ESCRITO IDÉNTICO A ESTE: */}
+            <Route path="/album/:albumId" element={<AlbumPage token={token} />} />
+        </Routes>
+        </BrowserRouter>
     );
 }
 
