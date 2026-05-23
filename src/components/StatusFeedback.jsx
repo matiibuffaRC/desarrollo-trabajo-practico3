@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const StatusFeedback = ({
   type,
@@ -7,15 +7,28 @@ const StatusFeedback = ({
   onClose,
   duration = 3000,
 }) => {
+  const [visible, setVisible] = useState(true);
   const isLoading = type === "loading";
 
   useEffect(() => {
+    setVisible(true);
+
+    if (isLoading) return;
+
     const timer = setTimeout(() => {
-      onClose();
+      setVisible(false);
+      onClose?.();
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [onClose, duration]);
+  }, [isLoading, onClose, duration, message, type]);
+
+  if (!visible) return null;
+
+  const handleClose = () => {
+    setVisible(false);
+    onClose?.();
+  };
 
   return (
     <div
