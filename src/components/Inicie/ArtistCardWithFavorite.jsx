@@ -3,6 +3,8 @@ import CorazonVacio from "../../assets/icons/heartVacio.svg";
 import CorazonRelleno from "../../assets/icons/heartRelleno.svg";
 
 function ArtistCardWithFavorite({ artist, isFav, onToggle, onNavigate }) {
+  const imageUrl = artist.image || artist.images?.find((img) => img.url)?.url || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200";
+
   return (
     <div
       onClick={onNavigate}
@@ -11,7 +13,7 @@ function ArtistCardWithFavorite({ artist, isFav, onToggle, onNavigate }) {
       <ArtistCard
         name={artist.name}
         genre={artist.genres?.slice(0, 2).join(" • ") || "Artista"}
-        image={artist.image}
+        image={imageUrl}
       />
 
       <button
