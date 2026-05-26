@@ -1,4 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿// Importamos las dependencias
+import React, { useEffect, useState } from 'react';
 
 function Player({ token }) {
     const [deviceId, setDeviceId] = useState(null);
