@@ -12,8 +12,8 @@ function ArtistCardWithFavorite({ artist, isFav, onToggle, onNavigate }) {
     >
       <ArtistCard
         name={artist.name}
-        genre={artist.genres?.slice(0, 2).join(" • ") || "Artista"}
-        image={imageUrl}
+        genre={artist.genres?.slice(0, 2).join(" • ") || artist.genre || "Artista"}
+        image={artist.images?.[0]?.url || artist.image || ""}
       />
 
       <button

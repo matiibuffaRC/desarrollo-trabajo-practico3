@@ -10,6 +10,9 @@ function AlbumPage({ token }) {
     const [tracks, setTracks] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [playError, setPlayError] = useState(null);
+    const [currentTrackId, setCurrentTrackId] = useState(null);
+    const [deviceId, setDeviceId] = useState(null);
 
     useEffect(() => {
         if (!token || !albumId) return;
@@ -46,6 +49,52 @@ function AlbumPage({ token }) {
 
         fetchAlbumTracks();
     }, [albumId, token]);
+
+    useEffect(() => {
+        const updateDeviceId = () => {
+            if (window.spotifyDeviceId) {
+                setDeviceId(window.spotifyDeviceId);
+            }
+        };
+
+        updateDeviceId();
+        window.addEventListener('spotify:player-ready', updateDeviceId);
+
+        return () => {
+            window.removeEventListener('spotify:player-ready', updateDeviceId);
+        };
+    }, []);
+
+    const playTrack = async (track) => {
+        setPlayError(null);
+        if (!token) {
+            setPlayError('Necesitas iniciar sesión para reproducir una canción.');
+            return;
+        }
+
+        const targetDeviceId = window.spotifyDeviceId || deviceId;
+        if (!targetDeviceId) {
+            setPlayError('No hay dispositivo Spotify listo. Espera a que cargue el reproductor.');
+            return;
+        }
+
+        try {
+            await axios.put(
+                `https://api.spotify.com/v1/me/player/play?device_id=${encodeURIComponent(targetDeviceId)}`,
+                { uris: [track.uri] },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            setCurrentTrackId(track.id);
+        } catch (err) {
+            console.error('Error reproduciendo la pista:', err);
+            setPlayError('No pudimos iniciar la reproducción. Asegurate de tener Spotify Premium y un reproductor activo.');
+        }
+    };
 
     // Transforma milisegundos a formato "MM:SS" de forma ultra segura
     const formatDuration = (ms) => {
@@ -97,7 +146,8 @@ function AlbumPage({ token }) {
                 ? tracks.map((track, index) => (
                     <div
                     key={track.id}
-                    className="flex items-center justify-between p-3 rounded-md bg-zinc-900/50 hover:bg-zinc-800/80 border border-zinc-900/80 transition-colors"
+                    onClick={() => playTrack(track)}
+                    className={`flex items-center justify-between p-3 rounded-md border border-zinc-900/80 transition-colors cursor-pointer ${currentTrackId === track.id ? 'bg-green-700/30' : 'bg-zinc-900/50 hover:bg-zinc-800/80'}`}
                     >
                     <div className="flex items-center gap-4">
                         <span className="text-zinc-500 font-medium w-4 text-right">
@@ -117,6 +167,11 @@ function AlbumPage({ token }) {
                     No se hallaron pistas de audio en este disco.
                     </p>
                 )}
+            {playError && (
+                <p className="text-yellow-500 font-medium bg-yellow-500/10 p-3 rounded-md border border-yellow-500/20 mt-4">
+                    {playError}
+                </p>
+            )}
             </div>
         </div>
         </div>
