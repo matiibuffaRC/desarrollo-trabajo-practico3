@@ -133,34 +133,31 @@ function ArtistPage({ token }) {
 
     return (
         <div className="min-h-screen bg-[#121212] text-white p-8">
-        <div className="mx-auto max-w-6xl">
-            <BackButton onBack={() => navigate("/")} />
+            <div className="mx-auto max-w-6xl">
+                <BackButton onBack={() => navigate("/")} />
 
-            {/* INFO DEL ARTISTA */}
-            {artist && <ArtistHeader artist={artist} />}
+                {artist && <ArtistHeader artist={artist} />}
 
-            {/* TÍTULO */}
-            <h1 className="text-3xl font-bold mb-2">
-            Álbumes de {decodeURIComponent(artistName)}
-            </h1>
+                <h1 className="text-3xl font-bold mb-2">
+                Álbumes de {decodeURIComponent(artistName)}
+                </h1>
 
-            <p className="text-gray-400 mb-8">
-            Seleccioná un disco para ver su listado de canciones:
-            </p>
+                <p className="text-gray-400 mb-8">
+                Seleccioná un disco para ver su listado de canciones:
+                </p>
 
-            {/* ESTADOS */}
-            {loading && (
-            <StatusFeedback
-                type="loading"
-                message="Buscando álbumes en el servidor..."
-            />
-            )}
+                {loading && (
+                    <StatusFeedback
+                        type="loading"
+                        message="Buscando álbumes en el servidor..."
+                    />
+                )}
 
-            {error && <StatusFeedback type="error" message={error} />}
+                {error && <StatusFeedback type="error" message={error} />}
 
-            {/* GRID */}
-            <AlbumGrid albums={albums} navigate={navigate} />
-        </div>
+                {/* GRID */}
+                <AlbumGrid albums={albums} navigate={navigate} />
+            </div>
         </div>
     );
 }

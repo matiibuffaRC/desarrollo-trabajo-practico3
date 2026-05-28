@@ -19,6 +19,8 @@ export const useArtistSearch = (token) => {
         try {
             // Petición a la API
             const { data } = await axios.get("https://api.spotify.com/v1/search", {
+                // Estructura de la petición
+                //  Header para la autenticación
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -36,7 +38,6 @@ export const useArtistSearch = (token) => {
             }
             } catch (err) {
                 console.error("Error en búsqueda:", err);
-                setError("Problemas de CORS. Cargando artistas de simulación.");
             } 
             finally {
                 setLoading(false);

@@ -5,17 +5,15 @@ const DEFAULT_PLACEHOLDER = "https://via.placeholder.com/300x300?text=Artista";
 function ArtistHeader({ artist }) {
     return (
         <section className="mb-10 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6">
-        {/* FOTO */}
         <img
             src={artist.images?.[0]?.url || DEFAULT_PLACEHOLDER}
             alt={artist.name}
             className="w-52 h-52 object-cover rounded-2xl shadow-lg"
         />
 
-        {/* INFO */}
         <div className="flex-1 text-center md:text-left">
             <p className="text-green-400 uppercase tracking-widest text-sm mb-2">
-            Artista
+                Artista
             </p>
 
             <h1 className="text-4xl font-black mb-4">{artist.name}</h1>
