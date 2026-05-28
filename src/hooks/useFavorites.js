@@ -2,23 +2,34 @@ import { useState, useEffect } from "react";
 import { normalizeArtistForFavorite } from "../utils/artistUtils";
 
 export const useFavorites = () => {
+    // Guardamos todos los artistas favoritos en una variable de estado
+    // La estructura de cada artista favorito es la siguiente: 
+    //  {
+    //   id, 
+    //   name,
+    //   imageUrl
+    //  }
     const [favorites, setFavorites] = useState([]);
 
     useEffect(() => {
         // Buscamos los favoritos del localStorage y los pasamos a JSON para trabajarlos
         const normalizeSavedFavorites = (saved) => {
-        try {
-            const parsed = JSON.parse(saved);
-            return Array.isArray(parsed)
-            ? parsed.map(normalizeArtistForFavorite)
-            : [];
-        } catch (err) {
-            console.error("Error parseando favoritos:", err);
-            return [];
-        }
+            try {
+                // Parseamos es convertir un string en un objeto de JavaScript
+                const parsed = JSON.parse(saved);
+                // Validamos que sea un array
+                return Array.isArray(parsed)
+                // Mapeamos
+                ? parsed.map(normalizeArtistForFavorite)
+                // Retornamos un array vacío
+                : [];
+            } catch (err) {
+                console.error("Error parseando favoritos:", err);
+                return [];
+            }
         };
 
-        // Inicializar desde localStorage
+        // Obtenemos los guardados en el localStorage y llamamos al a funcion para normalizarlos
         const saved = localStorage.getItem("spotify_favorites");
         if (saved) {
             setFavorites(normalizeSavedFavorites(saved));
@@ -36,6 +47,7 @@ export const useFavorites = () => {
             }
         };
 
+        // Escuchamos el evento personalizado y actualizamos la lista de favoritos
         window.addEventListener("spotify:favorites:updated", handleFavoritesUpdate);
         return () =>
             window.removeEventListener(
@@ -49,6 +61,7 @@ export const useFavorites = () => {
         // Verificamos si el artista ya está en favoritos
         const alreadyExists = favorites.some((fav) => fav.id === artist.id);
         let updatedFavorites = [];
+
         // Si ya existe, lo removemos. Si no, lo agregamos (normalizado)
         if (alreadyExists) {
             updatedFavorites = favorites.filter((fav) => fav.id !== artist.id);
@@ -65,7 +78,7 @@ export const useFavorites = () => {
             // Disparamos un evento personalizado para notificar a otros componentes que los favoritos han sido actualizados
             window.dispatchEvent(
                 new CustomEvent("spotify:favorites:updated", {
-                detail: updatedFavorites,
+                    detail: updatedFavorites,
                 }),
             );
         } catch (e) {

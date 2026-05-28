@@ -8,9 +8,11 @@ import Player from './components/Player';
 import { getAccessToken, buildSpotifyAuthUrl } from './services/spotify';
 
 function App() {
+    // El token de acceso sirve para autenticas las solicitudes a la API de Spotify. Si o si las necesitamos para interacturar con la API.
     const [token, setToken] = useState(null);
     const [authError, setAuthError] = useState(null);
 
+    // El useEffect lo que hace es ejecutar la función getAccessToken cuando el componente se monta
     useEffect(() => {
         getAccessToken()
             .then((accessToken) => setToken(accessToken))
@@ -20,6 +22,7 @@ function App() {
             });
     }, []);
 
+    // La ejecutamos cuando el usuario se loguea
     const handleLogin = async () => {
         try {
             const authUrl = await buildSpotifyAuthUrl();
@@ -32,6 +35,7 @@ function App() {
 
     return (
         <Router>
+            {/* Validamos si temos el token de acceso */}
             {!token ? (
                 <div style={{ textAlign: 'center', marginTop: '50px' }}>
                     <button
@@ -40,6 +44,7 @@ function App() {
                     >
                         Iniciar sesión con Spotify
                     </button>
+                    {/* Validamos si aparece un error */}
                     {authError && (
                         <p className="mt-4 text-sm text-red-400">{authError}</p>
                     )}

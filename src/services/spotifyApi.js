@@ -6,6 +6,7 @@ const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
 
 // Enviamos petición POST a Spotify para tener el token de acceso
 export const getAccessToken = async () => {
+    // btoa es una función que convierte una cadena en base64, que es el formato requerido por Spotify para la autenticación básica.
     const authString = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
     
     try {

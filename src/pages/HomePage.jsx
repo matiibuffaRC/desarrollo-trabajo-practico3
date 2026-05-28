@@ -24,11 +24,10 @@ function HomePage({ token }) {
         <main className="min-h-screen bg-[#121212] px-4 py-10 text-white">
             <section className="mx-auto max-w-6xl">
                 <InicieSection />
-
+                {/* Barra de búsqueda */}
                 <SearchBar onSearch={handleSearch} />
-
                 {loading && (
-                <StatusFeedback type="loading" message="Buscando artistas..." />
+                    <StatusFeedback type="loading" message="Buscando artistas..." />
                 )}
 
                 {error && <StatusFeedback type="error" message={error} />}

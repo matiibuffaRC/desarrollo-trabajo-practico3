@@ -55,6 +55,7 @@ export const buildSpotifyAuthUrl = async () => {
     const challenge = await createCodeChallenge(verifier);
     const state = window.crypto.randomUUID ? window.crypto.randomUUID() : Math.random().toString(36).slice(2);
 
+    // Guardamos en el localStorage estos valores
     window.localStorage.setItem(VERIFIER_STORAGE_KEY, verifier);
     window.localStorage.setItem(STATE_STORAGE_KEY, state);
 
