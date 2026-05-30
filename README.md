@@ -9,6 +9,4 @@ Tecnologías utilizadas:
   - Express
   - Material UI
   - Vercel
-
-Reproductor de 30 segundos integrado.
-3 vistas
+  - API de desarrollador de Spotify
